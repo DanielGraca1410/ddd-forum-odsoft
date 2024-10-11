@@ -1,3 +1,27 @@
 plugins {
     id "com.github.node-gradle.node" version "7.0.0"
 }
+
+node {
+    version = '20.17.0'  // Node.js version you're using
+    npmVersion = '10.8.2'  // npm version you're using
+    download = true  // Download Node.js locally if not already installed
+}
+
+// Rename the task to 'build' directly to replace the default Gradle build task
+task build(type: NpmTask) {
+    description = 'Runs the build script from package.json: rimraf ./dist && tsc'
+    group = 'build'
+    args = ['run', 'build']  // Equivalent to running `npm run build`
+}
+
+task docsGeneration(type: Exec) {
+    commandLine 'npm', 'run', 'jsdoc'
+}
+
+task generateDocs(dependsOn: docsGeneration) {
+    doLast {
+        println 'JSDoc documentation generated successfully!'
+    }
+}
+
